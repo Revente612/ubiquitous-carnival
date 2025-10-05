@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatality Client</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #0f0f0f;
+            color: #fff;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header Styles */
+        header {
+            background-color: #1a1a1a;
+            padding: 15px 0;
+            border-bottom: 1px solid #333;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #fff;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .nav-links a:hover {
+            color: #fff;
+        }
+        
+        .auth-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .lang-selector {
+            background: transparent;
+            color: #ccc;
+            border: none;
+            outline: none;
+        }
+        
+        .auth-btn {
+            background-color: #333;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .auth-btn:hover {
+            background-color: #444;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                        url('https://images.unsplash.com/photo-1511512578047-dfb367046420?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 100px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .hero p {
+            font-size: 20px;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            color: #ddd;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+        .btn {
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .btn-secondary {
+            background-color: transparent;
+            color: #fff;
+            border: 2px solid #555;
+        }
+        
+        .btn-primary:hover {
+            background-color: #666;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+        
+        /* Products Section */
+        .products {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            font-size: 36px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: #1a1a1a;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            border: 1px solid #333;
+            transition: transform 0.3s;
+        }
+        
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .product-title {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+        
+        .product-price {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+        
+        .buy-btn {
+            background-color: #555;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            width: 100%;
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+        
+        /* Auth Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: #1a1a1a;
+            width: 100%;
+            max-width: 400px;
+            border-radius: 8px;
+            padding: 30px;
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #ccc;
+        }
+        
+        .modal-title {
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 24px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 4px;
+            color: #fff;
+        }
+        
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .checkbox-group input {
+            margin-right: 10px;
+        }
+        
+        .submit-btn {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 4px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .submit-btn:hover {
+            background-color: #555;
+        }
+        
+        .auth-switch {
+            text-align: center;
+            margin-top: 20px;
+            color: #ccc;
+        }
+        
+        .auth-switch a {
+            color: #fff;
+            text-decoration: none;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: #1a1a1a;
+            padding: 40px 0;
+            border-top: 1px solid #333;
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .footer-section {
+            flex: 1;
+            min-width: 200px;
+        }
+        
+        .footer-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-links a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: #fff;
+        }
+        
+        .copyright {
+            text-align: center;
+            margin-top: 40px;
+            color: #777;
+            font-size: 14px;
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .nav-links {
+                gap: 15px;
+            }
+            
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">Fatality Client</div>
+                <div class="nav-links">
+                    <a href="#" id="home-link">Главная</a>
+                    <a href="#" id="buy-link">Купить</a>
+                    <a href="#" id="support-link">Поддержка</a>
+                    <a href="#" id="video-money">Деньги за видео</a>
+                </div>
+                <div class="auth-section">
+                    <select class="lang-selector">
+                        <option>Русский</option>
+                        <option>English</option>
+                    </select>
+                    <button class="auth-btn" id="auth-btn">Авторизация</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>Fatality Client</h1>
+            <p>Мы предоставляем вам лучший клиент для комфортной игры, который даст вам наилучшие впечатления от игры.</p>
+            <div class="cta-buttons">
+                <a href="#" class="btn btn-primary" id="buy-now">Купить</a>
+                <a href="#" class="btn btn-secondary" id="learn-more">Подробнее</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products Section -->
+    <section class="products">
+        <div class="container">
+            <h2 class="section-title">Наши продукты</h2>
+            <div class="products-grid">
+                <!-- Product 1 -->
+                <div class="product-card">
+                    <h3 class="product-title">Сброс HWID</h3>
+                    <p class="product-price">Цена: 299 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+                
+                <!-- Product 2 -->
+                <div class="product-card">
+                    <h3 class="product-title">ПРЕМИУМ</h3>
+                    <p class="product-price">Premium на 30 дней<br>Цена: 299 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+                
+                <!-- Product 3 -->
+                <div class="product-card">
+                    <h3 class="product-title">БАЗОВЫЙ НАБОР</h3>
+                    <p class="product-price">Базовый набор<br>Цена: 949 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+                
+                <!-- Product 4 -->
+                <div class="product-card">
+                    <h3 class="product-title">ALPHA</h3>
+                    <p class="product-price">ALPHA 1.16.5<br>Цена: 1049 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+                
+                <!-- Product 5 -->
+                <div class="product-card">
+                    <h3 class="product-title">ЭЛИТНЫЙ НАБОР</h3>
+                    <p class="product-price">Элитный набор<br>Цена: 1549 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+                
+                <!-- Product 6 -->
+                <div class="product-card">
+                    <h3 class="product-title">30 ДНЕЙ</h3>
+                    <p class="product-price">Клиент на 30 дней<br>Цена: 349 ₽</p>
+                    <button class="buy-btn" disabled>Оплатить</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="footer-title">Fatality Client</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Навигация</a></li>
+                        <li><a href="#">Главная</a></li>
+                        <li><a href="#">Купить</a></li>
+                        <li><a href="#">Поддержка</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Контакты</h3>
+                    <p>Почта для связи: mfinip@mail.ru</p>
+                    <p>ПН-ПТ 10:00-18:00 МСК</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3 class="footer-title">Правовая информация</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">Обработка персональных данных</a></li>
+                        <li><a href="#">Пользовательское соглашение</a></li>
+                        <li><a href="#">Правила пользования</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                Copyright © Fatality Client 2025
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div class="modal" id="auth-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2 class="modal-title" id="modal-title">Авторизация</h2>
+            
+            <form id="auth-form">
+                <div class="form-group">
+                    <label for="login">Введите логин или e-mail</label>
+                    <input type="text" id="login" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Введите пароль</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="remember">
+                    <label for="remember">Запомнить меня</label>
+                </div>
+                
+                <div class="form-group">
+                    <a href="#" style="color: #ccc;">Забыли пароль?</a>
+                </div>
+                
+                <button type="submit" class="submit-btn">Войти</button>
+            </form>
+            
+            <div class="auth-switch">
+                Нет аккаунта? <a href="#" id="switch-to-register">Зарегистрироваться</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div class="modal" id="register-modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-register-modal">&times;</span>
+            <h2 class="modal-title">Регистрация</h2>
+            
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-login">Придумайте логин</label>
+                    <input type="text" id="reg-login" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-password">Придумайте пароль</label>
+                    <input type="password" id="reg-password" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="reg-password-repeat">Повторите пароль</label>
+                    <input type="password" id="reg-password-repeat" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Введите E-mail</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="agreement" required>
+                    <label for="agreement">Я полностью ознакомлен и принимаю пользовательское соглашение, а также даю свое согласие на обработку персональных данных.</label>
+                </div>
+                
+                <button type="submit" class="submit-btn">Зарегистрироваться</button>
+            </form>
+            
+            <div class="auth-switch">
+                Уже есть аккаунт? <a href="#" id="switch-to-auth">Войти</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal functionality
+        const authModal = document.getElementById('auth-modal');
+        const registerModal = document.getElementById('register-modal');
+        const authBtn = document.getElementById('auth-btn');
+        const closeModal = document.getElementById('close-modal');
+        const closeRegisterModal = document.getElementById('close-register-modal');
+        const switchToRegister = document.getElementById('switch-to-register');
+        const switchToAuth = document.getElementById('switch-to-auth');
+        
+        // Open auth modal
+        authBtn.addEventListener('click', () => {
+            authModal.style.display = 'flex';
+        });
+        
+        // Close modals
+        closeModal.addEventListener('click', () => {
+            authModal.style.display = 'none';
+        });
+        
+        closeRegisterModal.addEventListener('click', () => {
+            registerModal.style.display = 'none';
+        });
+        
+        // Switch between auth and register modals
+        switchToRegister.addEventListener('click', (e) => {
+            e.preventDefault();
+            authModal.style.display = 'none';
+            registerModal.style.display = 'flex';
+        });
+        
+        switchToAuth.addEventListener('click', (e) => {
+            e.preventDefault();
+            registerModal.style.display = 'none';
+            authModal.style.display = 'flex';
+        });
+        
+        // Close modals when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === authModal) {
+                authModal.style.display = 'none';
+            }
+            if (e.target === registerModal) {
+                registerModal.style.display = 'none';
+            }
+        });
+        
+        // Form submission
+        document.getElementById('auth-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Авторизация временно недоступна. Переход на Telegram...');
+            window.location.href = 'https://t.me/Fatality_client';
+        });
+        
+        document.getElementById('register-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Регистрация временно недоступна. Переход на Telegram...');
+            window.location.href = 'https://t.me/Fatality_client';
+        });
+        
+        // Redirect all purchase buttons and links to Telegram
+        const purchaseButtons = document.querySelectorAll('.buy-btn, #buy-link, #buy-now');
+        purchaseButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                alert('Покупка временно недоступна. Переход на Telegram для получения информации...');
+                window.location.href = 'https://t.me/Fatality_client';
+            });
+        });
+        
+        // Redirect other links to Telegram
+        const otherLinks = document.querySelectorAll('#support-link, #video-money, #learn-more, .footer-links a');
+        otherLinks.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                window.location.href = 'https://t.me/Fatality_client';
+            });
+        });
+        
+        // Home link
+        document.getElementById('home-link').addEventListener('click', (e) => {
+            e.preventDefault();
+            window.scrollTo({top: 0, behavior: 'smooth'});
+        });
+    </script>
+</body>
+  </html>
